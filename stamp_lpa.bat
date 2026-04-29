@@ -18,114 +18,111 @@ set "STAMPER_SCRIPT=%SCRIPT_DIR%pdf_stamper.py"
 set "REQUIREMENTS=%SCRIPT_DIR%requirements.txt"
 
 REM ============================================================================
-REM Step 1: Check/Set up Python
+REM Step 1: Check if Python is installed
 REM ============================================================================
-:check_python
 python --version >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    goto :check_venv
-)
-
-echo.
-echo ============================================================================
-echo  Python Not Found - Installing...
-echo ============================================================================
-echo.
-
-REM Check if winget is available
-where winget >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] winget is not available on this system.
-    echo.
-    echo Please install Python 3.10+ manually from:
-    echo   https://www.python.org/downloads/
-    echo.
-    echo During installation, check: [✓] Add Python to PATH
-    echo.
-    pause
-    exit /b 1
-)
-
-echo Installing Python 3.12 via winget...
-winget install --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements
-
 if %ERRORLEVEL% NEQ 0 (
     echo.
-    echo [ERROR] Failed to install Python via winget.
+    echo ============================================================================
+    echo  Python Not Found - Installing...
+    echo ============================================================================
     echo.
-    echo Please install Python manually from:
-    echo   https://www.python.org/downloads/
+    
+    REM Check if winget is available
+    where winget >nul 2>&1
+    if %ERRORLEVEL% NEQ 0 (
+        echo [ERROR] winget is not available on this system.
+        echo.
+        echo Please install Python 3.10+ manually from:
+        echo   https://www.python.org/downloads/
+        echo.
+        echo During installation, check: [✓] Add Python to PATH
+        echo.
+        pause
+        exit /b 1
+    )
+    
+    echo Installing Python 3.12 via winget...
+    winget install --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements
+    
+    if %ERRORLEVEL% NEQ 0 (
+        echo.
+        echo [ERROR] Failed to install Python via winget.
+        echo.
+        echo Please install Python manually from:
+        echo   https://www.python.org/downloads/
+        echo.
+        pause
+        exit /b 1
+    )
+    
+    echo.
+    echo ============================================================================
+    echo  Python Installed Successfully!
+    echo ============================================================================
+    echo.
+    echo IMPORTANT: Please close this window and double-click stamp_lpa.bat again.
+    echo (Windows needs to refresh the PATH environment variable)
     echo.
     pause
-    exit /b 1
+    exit /b 0
 )
 
-echo.
-echo ============================================================================
-echo  Python Installed Successfully!
-echo ============================================================================
-echo.
-echo IMPORTANT: Please close this window and double-click stamp_lpa.bat again.
-echo (Windows needs to refresh the PATH environment variable)
-echo.
-pause
-exit /b 0
+echo Python found!
 
 REM ============================================================================
 REM Step 2: Check/Create Virtual Environment
 REM ============================================================================
-:check_venv
-if exist "%VENV_PYTHON%" (
-    goto :check_deps
-)
-
-echo.
-echo ============================================================================
-echo  Setting Up Virtual Environment
-echo ============================================================================
-echo.
-echo Creating virtual environment...
-python -m venv "%SCRIPT_DIR%pdf_stamper_env"
-
 if not exist "%VENV_PYTHON%" (
     echo.
-    echo [ERROR] Failed to create virtual environment.
-    echo Please ensure Python 3.10+ is installed correctly.
+    echo ============================================================================
+    echo  Setting Up Virtual Environment
+    echo ============================================================================
     echo.
-    pause
-    exit /b 1
+    echo Creating virtual environment...
+    python -m venv "%SCRIPT_DIR%pdf_stamper_env"
+    
+    if not exist "%VENV_PYTHON%" (
+        echo.
+        echo [ERROR] Failed to create virtual environment.
+        echo Please ensure Python 3.10+ is installed correctly.
+        echo.
+        pause
+        exit /b 1
+    )
+    
+    echo Virtual environment created!
+) else (
+    echo Virtual environment exists.
 )
-
-echo Virtual environment created!
 
 REM ============================================================================
 REM Step 3: Install Dependencies
 REM ============================================================================
-:check_deps
 echo.
 echo Checking dependencies...
 "%VENV_PYTHON%" -c "import fitz; import click" >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    goto :launch_app
-)
-
-echo Installing required libraries (PyMuPDF and Click)...
-"%VENV_PYTHON%" -m pip install --upgrade pip --quiet
-"%VENV_PIP%" install -r "%REQUIREMENTS%" --quiet
-
 if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo [ERROR] Failed to install dependencies.
-    echo Please check your internet connection and try again.
-    echo.
-    pause
-    exit /b 1
+    echo Installing required libraries (PyMuPDF and Click)...
+    "%VENV_PYTHON%" -m pip install --upgrade pip --quiet
+    "%VENV_PIP%" install -r "%REQUIREMENTS%" --quiet
+    
+    if %ERRORLEVEL% NEQ 0 (
+        echo.
+        echo [ERROR] Failed to install dependencies.
+        echo Please check your internet connection and try again.
+        echo.
+        pause
+        exit /b 1
+    )
+    echo Dependencies installed!
+) else (
+    echo Dependencies OK.
 )
 
 REM ============================================================================
 REM Step 4: Launch Application
 REM ============================================================================
-:launch_app
 cls
 echo.
 echo ============================================================================
