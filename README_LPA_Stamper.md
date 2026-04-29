@@ -20,7 +20,7 @@ This tool automatically adds solicitor certification stamps to **every page** of
 
 ### For Windows Users (Recommended)
 
-**Double-click** `stamp_lpa_easy.bat` and follow the on-screen wizard.
+**Double-click** `stamp_lpa.bat` and follow the on-screen wizard.
 
 The wizard will guide you through:
 1. Selecting the scanned LPA PDF
@@ -77,7 +77,7 @@ Dated: DD/MM/YYYY
 - Ensure all pages are included (minimum 15+ pages)
 
 ### Step 2: Run the Stamper
-- Double-click `stamp_lpa_easy.bat`
+- Double-click `stamp_lpa.bat`
 - Follow the wizard prompts
 - Wait for processing (usually 5-10 seconds)
 
@@ -151,7 +151,7 @@ stamp_lpa.bat client_lpa.pdf --office darlington --scale 0.85
 /home/kris/
 ├── pdf_stamper.py              # Main script
 ├── stamp_lpa.bat               # Command-line tool
-├── stamp_lpa_easy.bat          # Interactive wizard
+├── stamp_lpa.bat          # Interactive wizard
 ├── pdf_stamper_env/            # Python virtual environment
 └── README_LPA_Stamper.md       # This file
 ```

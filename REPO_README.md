@@ -44,7 +44,7 @@ A Python-based CLI tool that automatically adds solicitor certification stamps t
 
 2. **Launch the wizard:**
    ```batch
-   stamp_lpa_easy.bat
+   stamp_lpa.bat
    ```
 
 3. **Follow the 4-step wizard** to certify your LPA
@@ -75,7 +75,7 @@ python pdf_stamper.py input.pdf --fee-earner "John Smith" --office darlington
 lpa-certified-copy-stamper/
 ├── pdf_stamper.py          # Main application script
 ├── stamp_lpa.bat           # Command-line wrapper (Windows)
-├── stamp_lpa_easy.bat      # Interactive wizard (Windows)
+├── stamp_lpa.bat      # Interactive wizard (Windows)
 ├── setup.bat               # One-time setup script
 ├── requirements.txt        # Python dependencies
 ├── .gitignore             # Git ignore rules
@@ -92,7 +92,7 @@ lpa-certified-copy-stamper/
 
 ### Interactive Wizard (Recommended)
 ```batch
-stamp_lpa_easy.bat
+stamp_lpa.bat
 ```
 
 ### Command Line

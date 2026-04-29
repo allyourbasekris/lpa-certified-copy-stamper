@@ -1,219 +1,334 @@
 @echo off
 REM ============================================================================
-REM LPA Certified Copy Stamper
-REM BHP Law - Quick Certification Tool
+REM LPA Certified Copy Stamper - BHP Law
 REM ============================================================================
-REM This tool automatically adds solicitor certification stamps to all pages
-REM of a scanned Lasting Power of Attorney (LPA) PDF.
-REM
-REM The stamp appears in the bottom right corner of each page, ready for
-REM wet-ink signature by the Fee Earner.
+REM Single-file launcher that automatically:
+REM   1. Installs Python (via winget) if not present
+REM   2. Creates virtual environment
+REM   3. Installs dependencies
+REM   4. Launches the interactive certification wizard
 REM ============================================================================
 
 setlocal EnableDelayedExpansion
 
-REM Configuration
 set "SCRIPT_DIR=%~dp0"
 set "VENV_PYTHON=%SCRIPT_DIR%pdf_stamper_env\Scripts\python.exe"
+set "VENV_PIP=%SCRIPT_DIR%pdf_stamper_env\Scripts\pip.exe"
 set "STAMPER_SCRIPT=%SCRIPT_DIR%pdf_stamper.py"
+set "REQUIREMENTS=%SCRIPT_DIR%requirements.txt"
 
-REM Check if virtual environment exists
-if not exist "%VENV_PYTHON%" (
-    echo.
-    echo [ERROR] Virtual environment not found!
-    echo.
-    echo Please ensure the pdf_stamper_env folder exists in:
-    echo %SCRIPT_DIR%
-    echo.
-    echo If you need to set up the environment, run:
-    echo   python -m venv pdf_stamper_env
-    echo   pdf_stamper_env\Scripts\pip install pymupdf click
-    echo.
-    pause
-    exit /b 1
-)
-
-REM Check if input file was provided
-if "%~1"=="" (
-    goto :show_usage
-)
-
-REM Check if input file exists
-if not exist "%~1" (
-    echo.
-    echo [ERROR] File not found: %~1
-    echo.
-    pause
-    exit /b 1
-)
-
-set "INPUT_FILE=%~f1"
-shift
-
-REM Parse optional arguments
-set "OFFICE=darlington"
-set "FEE_EARNER="
-set "OUTPUT="
-set "DATE="
-set "SCALE=0.90"
-
-:parse_args
-if "%~1"=="" goto :run_stamper
-if /i "%~1"=="--office" (
-    set "OFFICE=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="--fee-earner" (
-    set "FEE_EARNER=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="-fe" (
-    set "FEE_EARNER=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="--output" (
-    set "OUTPUT=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="-o" (
-    set "OUTPUT=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="--date" (
-    set "DATE=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="-d" (
-    set "DATE=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="--scale" (
-    set "SCALE=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="-s" (
-    set "SCALE=%~2"
-    shift
-    shift
-    goto :parse_args
-)
-if /i "%~1"=="--help" (
-    goto :show_usage
-)
-if /i "%~1"=="-h" (
-    goto :show_usage
-)
-shift
-goto :parse_args
-
-:run_stamper
-echo.
-echo ============================================================================
-echo  LPA Certified Copy Stamper
-echo ============================================================================
-echo.
-echo Input File:     %INPUT_FILE%
-echo Office:         %OFFICE%
-echo Scale:          %SCALE%
-if not "%FEE_EARNER%"=="" echo Fee Earner:      %FEE_EARNER%
-if not "%DATE%"=="" echo Date:           %DATE%
-if not "%OUTPUT%"=="" echo Output:          %OUTPUT%
-echo.
-
-REM Build the command
-set "CMD=%VENV_PYTHON% "%STAMPER_SCRIPT%" "%INPUT_FILE%" --office %OFFICE% --scale %SCALE%"
-
-if not "%FEE_EARNER%"=="" (
-    set "CMD=!CMD! --fee-earner "%FEE_EARNER%""
-)
-
-if not "%DATE%"=="" (
-    set "CMD=!CMD! --date "%DATE%""
-)
-
-if not "%OUTPUT%"=="" (
-    set "CMD=!CMD! --output "%OUTPUT%""
-)
-
-echo Running certification...
-echo.
-
-REM Execute the stamper
-%CMD%
-
-echo.
+REM ============================================================================
+REM Step 1: Check/Set up Python
+REM ============================================================================
+:check_python
+python --version >nul 2>&1
 if %ERRORLEVEL% EQU 0 (
-    echo ============================================================================
-    echo  Success! The certified PDF is ready for printing and wet-ink signature.
-    echo ============================================================================
-) else (
-    echo ============================================================================
-    echo  An error occurred. Please check the messages above.
-    echo ============================================================================
+    goto :check_venv
 )
 
 echo.
-pause
-exit /b %ERRORLEVEL%
+echo ============================================================================
+echo  Python Not Found - Installing...
+echo ============================================================================
+echo.
 
-:show_usage
+REM Check if winget is available
+where winget >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] winget is not available on this system.
+    echo.
+    echo Please install Python 3.10+ manually from:
+    echo   https://www.python.org/downloads/
+    echo.
+    echo During installation, check: [✓] Add Python to PATH
+    echo.
+    pause
+    exit /b 1
+)
+
+echo Installing Python 3.12 via winget...
+winget install --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements
+
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [ERROR] Failed to install Python via winget.
+    echo.
+    echo Please install Python manually from:
+    echo   https://www.python.org/downloads/
+    echo.
+    pause
+    exit /b 1
+)
+
 echo.
 echo ============================================================================
-echo  LPA Certified Copy Stamper - BHP Law
+echo  Python Installed Successfully!
 echo ============================================================================
 echo.
-echo Adds solicitor certification stamps to all pages of a scanned LPA PDF.
-echo The stamp appears in the bottom right corner, ready for wet-ink signature.
-echo.
-echo USAGE:
-echo   stamp_lpa.bat ^<input.pdf^> [options]
-echo.
-echo REQUIRED:
-echo   input.pdf              Path to the scanned LPA PDF file
-echo.
-echo OPTIONS:
-echo   --office ^<name^>        Office location (default: darlington)
-echo                            Choices: darlington, durham, newcastle, 
-echo                                     tynemouth
-echo.
-echo   --fee-earner ^<name^>    Solicitor name (prompts if not provided)
-echo   -fe ^<name^>             Short form of --fee-earner
-echo.
-echo   --output ^<path^>        Output file path (default: ^<input^>_certified.pdf)
-echo   -o ^<path^>              Short form of --output
-echo.
-echo   --date ^<DD/MM/YYYY^>    Certification date (default: today)
-echo   -d ^<DD/MM/YYYY^>        Short form of --date
-echo.
-echo   --scale ^<0.80-0.95^>    Content scale (default: 0.90)
-echo   -s ^<0.80-0.95^>         Lower = more space for stamp
-echo.
-echo   --help, -h               Show this help message
-echo.
-echo EXAMPLES:
-echo   stamp_lpa.bat client_lpa.pdf --office darlington
-echo.
-echo   stamp_lpa.bat client_lpa.pdf -fe "John Smith" -o certified.pdf
-echo.
-echo   stamp_lpa.bat client_lpa.pdf --office newcastle --date "29/04/2026"
-echo.
-echo ============================================================================
+echo IMPORTANT: Please close this window and double-click stamp_lpa.bat again.
+echo (Windows needs to refresh the PATH environment variable)
 echo.
 pause
 exit /b 0
+
+REM ============================================================================
+REM Step 2: Check/Create Virtual Environment
+REM ============================================================================
+:check_venv
+if exist "%VENV_PYTHON%" (
+    goto :check_deps
+)
+
+echo.
+echo ============================================================================
+echo  Setting Up Virtual Environment
+echo ============================================================================
+echo.
+echo Creating virtual environment...
+python -m venv "%SCRIPT_DIR%pdf_stamper_env"
+
+if not exist "%VENV_PYTHON%" (
+    echo.
+    echo [ERROR] Failed to create virtual environment.
+    echo Please ensure Python 3.10+ is installed correctly.
+    echo.
+    pause
+    exit /b 1
+)
+
+echo Virtual environment created!
+
+REM ============================================================================
+REM Step 3: Install Dependencies
+REM ============================================================================
+:check_deps
+echo.
+echo Checking dependencies...
+"%VENV_PYTHON%" -c "import fitz; import click" >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    goto :launch_app
+)
+
+echo Installing required libraries (PyMuPDF and Click)...
+"%VENV_PYTHON%" -m pip install --upgrade pip --quiet
+"%VENV_PIP%" install -r "%REQUIREMENTS%" --quiet
+
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [ERROR] Failed to install dependencies.
+    echo Please check your internet connection and try again.
+    echo.
+    pause
+    exit /b 1
+)
+
+REM ============================================================================
+REM Step 4: Launch Application
+REM ============================================================================
+:launch_app
+cls
+echo.
+echo ============================================================================
+echo           LPA Certified Copy Stamper - BHP Law
+echo ============================================================================
+echo.
+echo This tool will add certification stamps to all pages of your scanned LPA.
+echo The stamps will appear in the bottom right corner of each page.
+echo.
+echo After processing, you can print the PDF and the Fee Earner will sign
+echo each page in wet ink.
+echo.
+echo ============================================================================
+echo.
+pause
+
+:select_file
+cls
+echo.
+echo ============================================================================
+echo  Step 1: Select the Scanned LPA File
+echo ============================================================================
+echo.
+echo Please drag and drop the scanned LPA PDF file onto this window,
+echo or type the full path to the file.
+echo.
+set /p "INPUT_FILE=Enter file path: "
+
+REM Remove quotes if present
+set "INPUT_FILE=%INPUT_FILE:"=%"
+
+REM Check if file exists
+if not exist "%INPUT_FILE%" (
+    echo.
+    echo [ERROR] File not found! Please try again.
+    echo.
+    pause
+    goto :select_file
+)
+
+echo.
+echo Selected: %INPUT_FILE%
+echo.
+pause
+
+:select_office
+cls
+echo.
+echo ============================================================================
+echo  Step 2: Select Office Location
+echo ============================================================================
+echo.
+echo Which office address should appear on the stamp?
+echo.
+echo   1. Darlington - BHP Law, Westgate House, Faverdale, Darlington, DL3 0PZ
+echo   2. Durham     - BHP Law, Aire House, Mandale Business Park, Belmont, Durham, DH1 1TH
+echo   3. Newcastle  - BHP Law, Suite 307, Collingwood Buildings, 38 Collingwood Street, Newcastle upon Tyne, NE1 1JF
+echo   4. Tynemouth  - BHP Law, 39 Percy Park Road, Tynemouth, North Shields, NE30 4LR
+echo.
+set /p "OFFICE_CHOICE=Enter choice (1-4, default=1): "
+
+if "%OFFICE_CHOICE%"=="1" set "OFFICE=darlington"
+if "%OFFICE_CHOICE%"=="2" set "OFFICE=durham"
+if "%OFFICE_CHOICE%"=="3" set "OFFICE=newcastle"
+if "%OFFICE_CHOICE%"=="4" set "OFFICE=tynemouth"
+if "%OFFICE_CHOICE%"=="" set "OFFICE=darlington"
+
+REM Validate
+if not defined OFFICE (
+    echo.
+    echo [ERROR] Invalid choice. Please try again.
+    echo.
+    pause
+    goto :select_office
+)
+
+echo.
+echo Selected office: %OFFICE%
+echo.
+pause
+
+:enter_fee_earner
+cls
+echo.
+echo ============================================================================
+echo  Step 3: Enter Fee Earner Name
+echo ============================================================================
+echo.
+echo Enter the name of the solicitor who will sign the certification.
+echo This will appear as: "I, [Name], Solicitor, of [address]..."
+echo.
+echo Example: John Smith
+echo.
+set /p "FEE_EARNER=Fee Earner name: "
+
+if "%FEE_EARNER%"=="" (
+    echo.
+    echo [ERROR] Name cannot be empty. Please try again.
+    echo.
+    pause
+    goto :enter_fee_earner
+)
+
+echo.
+echo Fee Earner: %FEE_EARNER%
+echo.
+pause
+
+:confirm
+cls
+echo.
+echo ============================================================================
+echo  Step 4: Confirm Settings
+echo ============================================================================
+echo.
+echo Please confirm the following settings:
+echo.
+echo   Input File:    %INPUT_FILE%
+echo   Office:        %OFFICE%
+echo   Fee Earner:    %FEE_EARNER%
+echo   Date:          Today (auto)
+echo   Scale:         90%% (default)
+echo.
+echo The output file will be saved as:
+echo   %~dpn1_certified.pdf
+echo.
+set /p "CONFIRM=Proceed with certification? (Y/N): "
+
+if /i not "%CONFIRM%"=="Y" (
+    echo.
+    echo Certification cancelled.
+    echo.
+    pause
+    exit /b 0
+)
+
+:processing
+cls
+echo.
+echo ============================================================================
+echo  Processing Your LPA
+echo ============================================================================
+echo.
+echo Please wait while the certification stamps are being applied...
+echo.
+
+REM Generate output filename
+for %%A in ("%INPUT_FILE%") do (
+    set "OUTPUT=%%~dpA%%~nA_certified.pdf"
+)
+
+REM Run the stamper
+"%VENV_PYTHON%" "%STAMPER_SCRIPT%" "%INPUT_FILE%" --fee-earner "%FEE_EARNER%" --office %OFFICE% --output "%OUTPUT%"
+
+if %ERRORLEVEL% EQU 0 (
+    goto :success
+) else (
+    goto :error
+)
+
+:success
+cls
+echo.
+echo ============================================================================
+echo                    Certification Complete!
+echo ============================================================================
+echo.
+echo Your certified LPA has been saved to:
+echo.
+echo   %OUTPUT%
+echo.
+echo NEXT STEPS:
+echo   1. Open the PDF and review the certification stamps
+echo   2. Print the document
+echo   3. The Fee Earner (%FEE_EARNER%) should sign each page in wet ink
+echo      in the space provided after "Signed"
+echo.
+echo ============================================================================
+echo.
+
+REM Ask if user wants to open the file
+set /p "OPEN_FILE=Open the certified PDF now? (Y/N): "
+if /i "%OPEN_FILE%"=="Y" (
+    start "" "%OUTPUT%"
+)
+
+echo.
+pause
+exit /b 0
+
+:error
+cls
+echo.
+echo ============================================================================
+echo                    An Error Occurred
+echo ============================================================================
+echo.
+echo There was a problem processing your LPA. Please check:
+echo   - The input file is a valid PDF
+echo   - The file is not open in another program
+echo   - You have write permission in the folder
+echo.
+echo If the problem persists, please contact IT support.
+echo.
+pause
+exit /b 1

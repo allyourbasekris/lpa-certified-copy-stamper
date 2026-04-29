@@ -7,9 +7,9 @@
 ## 🚀 How to Certify an LPA
 
 ### Step 1: Open the Tool
-**Double-click** `stamp_lpa_easy.bat`
+**Double-click** `stamp_lpa.bat`
 
-![Step 1](https://via.placeholder.com/600x200?text=Double-click+stamp_lpa_easy.bat)
+![Step 1](https://via.placeholder.com/600x200?text=Double-click+stamp_lpa.bat)
 
 ---
 
@@ -132,7 +132,7 @@ Output: client_lpa_certified.pdf
 
 | Task | Action |
 |------|--------|
-| **Start tool** | Double-click `stamp_lpa_easy.bat` |
+| **Start tool** | Double-click `stamp_lpa.bat` |
 | **Select PDF** | Drag & drop or type path |
 | **Choose office** | Press 1-5 |
 | **Enter name** | Type Fee Earner name |

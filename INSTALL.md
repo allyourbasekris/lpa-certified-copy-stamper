@@ -7,7 +7,7 @@
 If the tool has already been set up on your system:
 
 1. Navigate to the installation folder
-2. Double-click `stamp_lpa_easy.bat`
+2. Double-click `stamp_lpa.bat`
 3. Follow the on-screen wizard
 
 **That's it!** You're ready to certify LPAs.
@@ -48,7 +48,7 @@ The setup script will:
 
 #### Step 3: Test the Installation
 
-1. Double-click `stamp_lpa_easy.bat`
+1. Double-click `stamp_lpa.bat`
 2. The welcome screen should appear
 3. Press `Ctrl+C` to cancel (it's working!)
 
@@ -74,7 +74,7 @@ Copy all repository files to the network location:
 LPA_Stamper/
 ├── pdf_stamper.py
 ├── stamp_lpa.bat
-├── stamp_lpa_easy.bat
+├── stamp_lpa.bat
 ├── setup.bat
 ├── requirements.txt
 ├── README_LPA_Stamper.md
@@ -94,7 +94,7 @@ LPA_Stamper/
 #### Step 4: Test with Different User Accounts
 
 Have 2-3 different users test the tool to ensure:
-- They can run `stamp_lpa_easy.bat`
+- They can run `stamp_lpa.bat`
 - Output PDFs are created successfully
 - No permission errors occur
 
@@ -105,7 +105,7 @@ For easier access, create a shortcut on users' desktops:
 1. Right-click on desktop → **New** → **Shortcut**
 2. Enter location:
    ```
-   S:\Shared\Tools\LPA_Stamper\stamp_lpa_easy.bat
+   S:\Shared\Tools\LPA_Stamper\stamp_lpa.bat
    ```
 3. Name it: **LPA Certified Copy Stamper**
 4. Click **Finish**
