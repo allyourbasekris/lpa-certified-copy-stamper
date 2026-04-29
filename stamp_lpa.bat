@@ -69,12 +69,12 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo Python found!
+echo.
 
 REM ============================================================================
 REM Step 2: Check/Create Virtual Environment
 REM ============================================================================
 if not exist "%VENV_PYTHON%" (
-    echo.
     echo ============================================================================
     echo  Setting Up Virtual Environment
     echo ============================================================================
@@ -92,18 +92,20 @@ if not exist "%VENV_PYTHON%" (
     )
     
     echo Virtual environment created!
+    echo.
 ) else (
     echo Virtual environment exists.
+    echo.
 )
 
 REM ============================================================================
 REM Step 3: Install Dependencies
 REM ============================================================================
-echo.
 echo Checking dependencies...
 "%VENV_PYTHON%" -c "import fitz; import click" >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
     echo Installing required libraries (PyMuPDF and Click)...
+    echo.
     "%VENV_PYTHON%" -m pip install --upgrade pip --quiet
     "%VENV_PIP%" install -r "%REQUIREMENTS%" --quiet
     
@@ -119,6 +121,9 @@ if %ERRORLEVEL% NEQ 0 (
 ) else (
     echo Dependencies OK.
 )
+echo.
+echo Setup complete! Launching application...
+echo.
 
 REM ============================================================================
 REM Step 4: Launch Application
