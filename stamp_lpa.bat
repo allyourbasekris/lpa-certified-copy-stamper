@@ -61,10 +61,15 @@ if %ERRORLEVEL% NEQ 0 (
     echo  Python Installed Successfully!
     echo ============================================================================
     echo.
-    echo IMPORTANT: Please close this window and double-click stamp_lpa.bat again.
-    echo (Windows needs to refresh the PATH environment variable)
+    echo IMPORTANT: A new command window will now open.
+    echo Please use THAT window to run stamp_lpa.bat again.
+    echo.
+    echo This is required for Windows to recognize the new Python installation.
     echo.
     pause
+    
+    REM Launch a new command prompt with refreshed environment
+    start cmd /k "cd /d \"%SCRIPT_DIR%\" && echo. && echo New command prompt opened with refreshed environment. && echo Please run stamp_lpa.bat again from this window. && echo."
     exit /b 0
 )
 
