@@ -1,0 +1,35 @@
+{
+  "app_name": "LPA Certified Copy Stamper",
+  "version": "1.0.0",
+  "offices": {
+    "darlington": {
+      "name": "Darlington",
+      "address": "BHP Law, Westgate House, Faverdale, Darlington, DL3 0PZ"
+    },
+    "durham": {
+      "name": "Durham",
+      "address": "BHP Law, Aire House, Mandale Business Park, Belmont, Durham, DH1 1TH"
+    },
+    "newcastle": {
+      "name": "Newcastle",
+      "address": "BHP Law, Suite 307, Collingwood Buildings, 38 Collingwood Street, Newcastle upon Tyne, NE1 1JF"
+    },
+    "tynemouth": {
+      "name": "Tynemouth",
+      "address": "BHP Law, 39 Percy Park Road, Tynemouth, North Shields, NE30 4LR"
+    }
+  },
+  "defaults": {
+    "scale": 0.90,
+    "stamp_fontsize": 5,
+    "stamp_width_ratio": 0.35,
+    "stamp_height": 30,
+    "margin_right": 10,
+    "margin_bottom": 25
+  },
+  "stamp": {
+    "signed_dots": "......................................",
+    "text_regular": "I, {fee_earner}, Solicitor, of {address}, certify that this is a true and complete copy of the corresponding page of the original Lasting Power of Attorney. Signed {signed_dots} Dated: {date}",
+    "text_last_page": "I, {fee_earner}, Solicitor, of {address}, certify that this is a true and complete copy of the corresponding page of the original Lasting Power of Attorney and I further certify that this is a true and complete copy of the Lasting Power of Attorney. Signed {signed_dots} Dated: {date}"
+  }
+}
