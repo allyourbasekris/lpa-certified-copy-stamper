@@ -34,17 +34,18 @@ If the tool has already been set up on your system:
 
 #### Step 2: Set Up the Application
 
+`stamp_lpa.bat` handles setup automatically on first run, but if you prefer to set it up manually:
+
 1. Open File Explorer
 2. Navigate to the folder containing the downloaded files
-3. **Right-click** on `setup.bat`
+3. **Right-click** on `stamp_lpa.bat`
 4. Select **"Run as administrator"**
-5. Wait for the installation to complete (2-3 minutes)
+5. Wait for the installation to complete (2-3 minutes). The script will:
+   - Install Python if not present
+   - Create a Python virtual environment
+   - Install PyMuPDF and Click libraries
+   - Verify the installation
 6. Press any key to close the setup window
-
-The setup script will:
-- Create a Python virtual environment
-- Install PyMuPDF and Click libraries
-- Verify the installation
 
 #### Step 3: Test the Installation
 
@@ -72,24 +73,30 @@ S:\Shared\Tools\LPA_Stamper\
 Copy all repository files to the network location:
 ```
 LPA_Stamper/
-├── pdf_stamper.py
 ├── stamp_lpa.bat
-├── stamp_lpa.bat
-├── setup.bat
-├── requirements.txt
 ├── README_LPA_Stamper.md
+├── QUICKSTART.md
 ├── INSTALL.md
-└── .gitignore
+├── app/
+│   ├── pdf_stamper.py
+│   ├── config.py
+│   ├── config.json
+│   └── requirements.txt
+└── docs/
+    ├── CONFIG.md
+    ├── REPO_README.md
+    └── LICENSE
 ```
 
 #### Step 3: Run Setup Once
 
 1. Log in as a user with write permissions
 2. Navigate to the network folder
-3. Run `setup.bat`
-4. Wait for completion
+3. **Right-click** on `stamp_lpa.bat`
+4. Select **"Run as administrator"**
+5. Wait for completion
 
-**Note:** The virtual environment will be created in the same folder and shared by all users.
+**Note:** `stamp_lpa.bat` will automatically install Python (if needed), create the virtual environment inside the `app\` folder, and install dependencies.
 
 #### Step 4: Test with Different User Accounts
 
@@ -121,18 +128,18 @@ For easier access, create a shortcut on users' desktops:
 ### "Access Denied" or "Permission Denied"
 
 **Solution:** 
-- Run `setup.bat` as Administrator (right-click → Run as administrator)
+- Run `stamp_lpa.bat` as Administrator (right-click → Run as administrator)
 - Ensure the folder has write permissions for all users
 
 ### "Virtual environment creation failed"
 
 **Solution:**
-1. Delete the `pdf_stamper_env` folder if it exists
-2. Run `setup.bat` again as Administrator
+1. Delete the `app\.venv` folder if it exists
+2. Run `stamp_lpa.bat` again as Administrator
 3. If it still fails, try manually:
    ```cmd
-   python -m venv pdf_stamper_env
-   pdf_stamper_env\Scripts\pip install -r requirements.txt
+   python -m venv app/.venv
+   app/.venv/Scripts/pip install -r app/requirements.txt
    ```
 
 ### "ModuleNotFoundError: No module named 'fitz'"
@@ -140,7 +147,7 @@ For easier access, create a shortcut on users' desktops:
 **Solution:**
 ```cmd
 cd [installation_folder]
-pdf_stamper_env\Scripts\activate
+app\.venv\Scripts\activate
 pip install --upgrade pymupdf
 ```
 
@@ -166,10 +173,10 @@ To update to a newer version:
 
 1. **Backup** your current installation folder
 2. Download the new version files
-3. Replace all files **except** `pdf_stamper_env/` folder
+3. Replace all files **except** `app\.venv\` folder
 4. Run:
    ```cmd
-   pdf_stamper_env\Scripts\pip install -r requirements.txt --upgrade
+   app\.venv\Scripts\pip install -r app\requirements.txt --upgrade
    ```
 
 ---

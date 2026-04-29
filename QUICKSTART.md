@@ -29,7 +29,7 @@ Select your office from the list:
 
 Press **Enter** (default is Darlington).
 
-![Step 3](https://via.placeholder.com/600x200?text=Select+your+office+1-5)
+![Step 3](https://via.placeholder.com/600x200?text=Select+your+office+1-4)
 
 ---
 
@@ -116,7 +116,7 @@ Output: client_lpa_certified.pdf
 **A:** Not yet. Process one at a time for now.
 
 ### Q: Do I need to install anything?
-**A:** Only once! Run `setup.bat` on first use (see INSTALL.md).
+**A:** Only once! `stamp_lpa.bat` will automatically install Python, create a virtual environment, and download dependencies on first run.
 
 ---
 
@@ -134,7 +134,7 @@ Output: client_lpa_certified.pdf
 |------|--------|
 | **Start tool** | Double-click `stamp_lpa.bat` |
 | **Select PDF** | Drag & drop or type path |
-| **Choose office** | Press 1-5 |
+| **Choose office** | Press 1-4 |
 | **Enter name** | Type Fee Earner name |
 | **Confirm** | Press Y |
 | **Open result** | Press Y when prompted |

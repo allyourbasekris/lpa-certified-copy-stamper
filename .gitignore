@@ -21,7 +21,7 @@ wheels/
 *.egg
 
 # Virtual Environment
-pdf_stamper_env/
+app/.venv/
 venv/
 ENV/
 env/

@@ -12,7 +12,7 @@ The application uses a JSON configuration file (`config.json`) to store settings
 config.json
 ```
 
-Must be in the same directory as `pdf_stamper.py` and `config.py`.
+Must be in the same directory as `pdf_stamper.py` and `config.py` inside the `app/` folder.
 
 ---
 
@@ -140,13 +140,13 @@ After editing `config.json`, validate the JSON syntax:
 Visit [jsonlint.com](https://jsonlint.com/) and paste your config.
 
 ### Option 2: Command Line
-```bash
-python -m json.tool config.json > /dev/null && echo "Valid JSON" || echo "Invalid JSON"
+```cmd
+python -m json.tool app/config.json > /dev/null && echo "Valid JSON" || echo "Invalid JSON"
 ```
 
 ### Option 3: Test the Application
 ```bash
-python pdf_stamper.py --help
+python app/pdf_stamper.py --help
 ```
 
 If the config is invalid, you'll see an error like:
@@ -161,12 +161,12 @@ RuntimeError: Invalid JSON in configuration file: ...
 Before making changes:
 
 ```bash
-cp config.json config.json.backup
+cp app/config.json app/config.json.backup
 ```
 
 To restore:
 ```bash
-cp config.json.backup config.json
+cp app/config.json.backup app/config.json
 ```
 
 ---
@@ -177,7 +177,7 @@ cp config.json.backup config.json
 
 **Cause:** `config.json` is missing or not in the correct directory.
 
-**Solution:** Ensure `config.json` is in the same folder as `pdf_stamper.py`.
+**Solution:** Ensure `config.json` is in the `app/` folder alongside `pdf_stamper.py` and `config.py`.
 
 ### "Invalid JSON in configuration file"
 

@@ -19,7 +19,7 @@ A Python-based CLI tool that automatically adds solicitor certification stamps t
 - ✅ **Smart positioning** - Bottom right corner, avoids OPG official stamp
 - ✅ **White background** - Ensures readability over any scanned content
 - ✅ **Auto-date** - Pre-populates today's date
-- ✅ **Multi-office support** - 5 BHP Law office locations
+- ✅ **Multi-office support** - 4 BHP Law office locations
 - ✅ **Last page detection** - Applies extended certification text
 - ✅ **Professional output** - Clean, consistent, ready for wet-ink signature
 
@@ -37,17 +37,14 @@ A Python-based CLI tool that automatically adds solicitor certification stamps t
 
 ### For End Users
 
-1. **Run setup once:**
-   ```batch
-   setup.bat
-   ```
-
-2. **Launch the wizard:**
+1. **Launch the wizard:**
    ```batch
    stamp_lpa.bat
    ```
 
-3. **Follow the 4-step wizard** to certify your LPA
+2. **Follow the 4-step wizard** to certify your LPA
+
+`stamp_lpa.bat` handles Python installation, virtual environment creation, and dependency installation automatically on first run.
 
 ### For Developers
 
@@ -57,14 +54,14 @@ git clone <repository-url>
 cd lpa-certified-copy-stamper
 
 # Create virtual environment
-python -m venv pdf_stamper_env
-pdf_stamper_env\Scripts\activate
+python -m venv app/.venv
+app/.venv/Scripts/activate
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -r app/requirements.txt
 
 # Run the tool
-python pdf_stamper.py input.pdf --fee-earner "John Smith" --office darlington
+python app/pdf_stamper.py input.pdf --fee-earner "John Smith" --office darlington
 ```
 
 ---
@@ -73,17 +70,19 @@ python pdf_stamper.py input.pdf --fee-earner "John Smith" --office darlington
 
 ```
 lpa-certified-copy-stamper/
-├── pdf_stamper.py          # Main application script
-├── stamp_lpa.bat           # Command-line wrapper (Windows)
-├── stamp_lpa.bat      # Interactive wizard (Windows)
-├── setup.bat               # One-time setup script
-├── requirements.txt        # Python dependencies
-├── .gitignore             # Git ignore rules
-├── LICENSE                # License information
-├── README_LPA_Stamper.md  # User documentation
-├── INSTALL.md             # Installation guide
-├── QUICKSTART.md          # Quick start guide
-└── REPO_README.md         # This file
+├── stamp_lpa.bat              # Windows launcher (wizard + CLI passthrough)
+├── README_LPA_Stamper.md      # User documentation
+├── QUICKSTART.md              # Quick start guide
+├── INSTALL.md                 # Installation guide
+├── app/                         # Application code
+│   ├── pdf_stamper.py
+│   ├── config.py
+│   ├── config.json
+│   └── requirements.txt
+└── docs/                        # Documentation
+    ├── CONFIG.md
+    ├── REPO_README.md
+    └── LICENSE
 ```
 
 ---
@@ -186,7 +185,7 @@ Dated: DD/MM/YYYY
 curl -o sample_lpa.pdf "https://assets.publishing.service.gov.uk/media/5a8202e440f0b6230269a5d0/LP1F-Create-and-register-your-lasting-power-of-attorney.pdf"
 
 # Run the stamper
-python pdf_stamper.py sample_lpa.pdf --fee-earner "Test User" --office darlington
+python app/pdf_stamper.py sample_lpa.pdf --fee-earner "Test User" --office darlington
 
 # Check output
 ls -la sample_lpa_certified.pdf
@@ -227,7 +226,7 @@ See [LICENSE](LICENSE) file for full terms.
 ### v1.0.0 (April 2026)
 - Initial release
 - Bottom right corner stamp placement
-- Support for all 5 BHP Law offices
+- Support for all 4 BHP Law offices
 - Auto-populated date
 - Interactive wizard
 - White background for readability

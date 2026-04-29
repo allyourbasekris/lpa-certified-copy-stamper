@@ -101,7 +101,7 @@ Dated: DD/MM/YYYY
 
 | Option | Short | Description |
 |--------|-------|-------------|
-| `--office <name>` | | Office: darlington, durham, newcastle, stockton, tynemouth |
+| `--office <name>` | | Office: darlington, durham, newcastle, tynemouth |
 | `--fee-earner "Name"` | `-fe` | Solicitor name (prompts if not provided) |
 | `--output <path>` | `-o` | Output filename (default: `<input>_certified.pdf`) |
 | `--date "DD/MM/YYYY"` | `-d` | Certification date (default: today) |
@@ -149,11 +149,19 @@ stamp_lpa.bat client_lpa.pdf --office darlington --scale 0.85
 ### File Locations
 ```
 /home/kris/
-├── pdf_stamper.py              # Main script
-├── stamp_lpa.bat               # Command-line tool
-├── stamp_lpa.bat          # Interactive wizard
-├── pdf_stamper_env/            # Python virtual environment
-└── README_LPA_Stamper.md       # This file
+├── stamp_lpa.bat               # Interactive wizard / CLI launcher
+├── README_LPA_Stamper.md       # This file
+├── QUICKSTART.md               # Quick reference guide
+├── INSTALL.md                  # Installation instructions
+├── app/
+│   ├── pdf_stamper.py          # Main script
+│   ├── config.py               # Configuration loader
+│   ├── config.json             # Office addresses & settings
+│   └── requirements.txt        # Python dependencies
+└── docs/
+    ├── CONFIG.md               # Configuration reference
+    ├── REPO_README.md          # Repository overview
+    └── LICENSE                 # License information
 ```
 
 ---
@@ -161,7 +169,7 @@ stamp_lpa.bat client_lpa.pdf --office darlington --scale 0.85
 ## Troubleshooting
 
 ### "Virtual environment not found"
-Ensure the `pdf_stamper_env` folder exists. If missing, contact IT support.
+Ensure the `app\.venv` folder exists inside the application folder. If missing, contact IT support.
 
 ### "File not found"
 Check that:
@@ -194,7 +202,7 @@ For technical issues or questions, please contact:
 
 - **v1.0** (April 2026) - Initial release
   - Bottom right corner stamp placement
-  - Support for all 5 BHP Law offices
+  - Support for all 4 BHP Law offices
   - Auto-populated date
   - Interactive wizard for easy use
 
