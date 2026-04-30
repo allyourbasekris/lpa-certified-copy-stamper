@@ -158,14 +158,7 @@ echo A file browser window will open. Please select the scanned LPA PDF.
 echo.
 pause
 
-for /f "usebackq delims=" %%A in (`
-  powershell -NoProfile -Command ^
-    "[System.Windows.Forms.Application]::EnableVisualStyles();" ^
-    "$f = New-Object System.Windows.Forms.OpenFileDialog;" ^
-    "$f.Filter = 'PDF files (*.pdf)|*.pdf|All files (*.*)|*.*';" ^
-    "$f.Title = 'Select LPA PDF';" ^
-    "if ($f.ShowDialog() -eq 'OK') { Write-Output $f.FileName } else { Write-Output '' }"
-`) do set "INPUT_FILE=%%A"
+for /f "usebackq delims=" %%A in (`powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.OpenFileDialog; $f.Filter = 'PDF files (*.pdf)|*.pdf|All files (*.*)|*.*'; $f.Title = 'Select LPA PDF'; if ($f.ShowDialog() -eq 'OK') { Write-Output $f.FileName } else { Write-Output '' }"`) do set "INPUT_FILE=%%A"
 
 if "!INPUT_FILE!"=="" (
     echo.
