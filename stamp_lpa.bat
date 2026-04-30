@@ -154,15 +154,27 @@ echo ===========================================================================
 echo  Step 1: Select the Scanned LPA File
 echo ============================================================================
 echo.
-echo Please drag and drop the scanned LPA PDF file onto this window,
-echo or type the full path to the file.
+echo A file browser window will open. Please select the scanned LPA PDF.
 echo.
-set /p "INPUT_FILE=Enter file path: "
+pause
 
-REM Remove quotes if present
-set "INPUT_FILE=!INPUT_FILE:"=!"
+for /f "usebackq delims=" %%A in (`
+  powershell -NoProfile -Command ^
+    "[System.Windows.Forms.Application]::EnableVisualStyles();" ^
+    "$f = New-Object System.Windows.Forms.OpenFileDialog;" ^
+    "$f.Filter = 'PDF files (*.pdf)|*.pdf|All files (*.*)|*.*';" ^
+    "$f.Title = 'Select LPA PDF';" ^
+    "if ($f.ShowDialog() -eq 'OK') { Write-Output $f.FileName } else { Write-Output '' }"
+`) do set "INPUT_FILE=%%A"
 
-REM Check if file exists
+if "!INPUT_FILE!"=="" (
+    echo.
+    echo [ERROR] No file selected. Please try again.
+    echo.
+    pause
+    goto :select_file
+)
+
 if not exist "!INPUT_FILE!" (
     echo.
     echo [ERROR] File not found! Please try again.
@@ -174,7 +186,6 @@ if not exist "!INPUT_FILE!" (
 echo.
 echo Selected: !INPUT_FILE!
 echo.
-pause
 
 for %%A in ("!INPUT_FILE!") do set "OUTPUT=%%~dpnA_certified.pdf"
 

@@ -53,6 +53,9 @@ DEFAULT_STAMP_HEIGHT: float = DEFAULTS.get("stamp_height", 30)
 DEFAULT_MARGIN_RIGHT: float = DEFAULTS.get("margin_right", 10)
 DEFAULT_MARGIN_BOTTOM: float = DEFAULTS.get("margin_bottom", 25)
 
+# Stamp Y offset (additional bottom padding below the stamp rect)
+STAMP_Y_OFFSET: float = 10
+
 # Stamp text templates
 STAMP_CONFIG: Dict[str, str] = _config.get("stamp", {})
 SIGNED_DOTS: str = STAMP_CONFIG.get("signed_dots", "......................................")
